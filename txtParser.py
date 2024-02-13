@@ -86,9 +86,6 @@ with open('test.txt') as f:
         }
         index += 1
 
-        # if last_letter_obj['letter'] == '':
-        #     pass
-
         if last_letter_obj['pos'] == position[0] and last_letter_obj['letter'] != ' ':
 
             if current_letter_obj['letter'] == ' ':
