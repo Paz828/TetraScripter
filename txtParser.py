@@ -4,7 +4,9 @@ position = ['full', 'top', 'bottom']
 last_letter_obj = {
     'letter': '',
     'pos': '',
-    'special': 'false',
+    'special': False,
+    'pre_o': False,
+    'post_o': False,
 }
 tetra_dict = {
     'A': 'A',
@@ -70,9 +72,50 @@ with open('test.txt') as f:
     output = []
     index = 0
 
-    def t_check(ltr):
+    def t_check(ltr): # T
         if ltr.lower() == 't' and last_letter_obj['pos'] == position[2]:
             last_letter_obj['pos'] = position[1]
+            last_letter_obj['special'] = True
+
+    def handle_special(ltr):
+            current = current_letter_obj['letter'].lower()
+            
+            match ltr.lower():
+
+                case 'l': # L
+                    
+                    if last_letter_obj['pos'] == position[1]:
+                        last_letter_obj['pos'] = position[0]
+
+                    current_letter_obj['pos'] = position[0]
+
+                case 't': #TH
+
+                    if current == 'h':
+                        last_letter_obj['letter'] = 'TH'
+                        last_letter_obj['pos'] = position[0]
+                        last_letter_obj['special'] = True
+
+                case 'c': # CH
+
+                    if current == 'h':
+                        last_letter_obj['letter'] = 'CH'
+                        last_letter_obj['pos'] = position[0]
+                        last_letter_obj['special'] = True
+
+                case 's': # SH
+
+                    if current == 'h':
+                        last_letter_obj['letter'] = 'SH'
+                        last_letter_obj['pos'] = position[0]
+                        last_letter_obj['special'] = True
+
+                case 'p': # PH
+
+                    if current == 'h':
+                        last_letter_obj['letter'] = 'PH'
+                        last_letter_obj['pos'] = position[0]
+                        last_letter_obj['special'] = True
 
     for char in contents:
         char_list.append(char)
@@ -82,7 +125,10 @@ with open('test.txt') as f:
         current_letter_obj = {
         'letter': letter,
         'pos': position[0],
-        'special': 'false',
+        'special': False,
+        'pre_o': False,
+        'post_o': False,
+
         }
         index += 1
 
