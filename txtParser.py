@@ -66,6 +66,7 @@ tetra_dict = {
     'Z': 'Z',
     'z': 'z',
     '\n': '\n',
+    '`': '`',
 }
 
 
@@ -83,13 +84,20 @@ with open('translation.txt') as f:
             last_letter_obj['pos'] = position[1]
 
     def o_check(ltr):
+        pass
 
+    def double_check(current):
 
-    def double_check(ltr):
+        if last_letter_obj['special'] == True:
+            current['special'] = True
 
+        if last_letter_obj['letter'] == current['letter']:
+            current['letter'] = '`'
+            current['pos'] = last_letter_obj['pos']
 
     def generate_special(ltr):
-        current = current_letter_obj['letter'].lower()            
+        current = current_letter_obj['letter'].lower()   
+
         match ltr.lower():
 
             case 'l': # L
@@ -164,7 +172,7 @@ with open('translation.txt') as f:
         # Positons the last letter to the top position and current letter to the bottom positon. Also checks for if a space is next in which case it puts the letter in the full position if need be
         if (last_letter_obj['pos'] == position[0] or last_letter_obj['pos'] == position[1]) and last_letter_obj['letter'] != ' ':
 
-            if current_letter_obj['letter'] == ' ' or current_letter_obj['letter'] == '\n':
+            if (current_letter_obj['letter'] == ' ' or current_letter_obj['letter'] == '\n') and last_letter_obj['letter'].lower() != 'l':
                 last_letter_obj['pos'] = position[0]
                 last_letter_obj['letter'] = last_letter_obj['letter'].upper()
             
@@ -178,6 +186,7 @@ with open('translation.txt') as f:
             current_letter_obj['pos'] = position[0]
 
         generate_special(last_letter_obj['letter'])
+        double_check(current_letter_obj)
         skip = handle_special(current_letter_obj)
 
         if skip == 'skip':
@@ -205,7 +214,7 @@ with open('translation.txt') as f:
                 current_letter_obj['letter'] = current_letter_obj['letter'].upper()
 
             output.append(tetra_dict[current_letter_obj['letter']])
-            
+
         print(last_letter_obj)
         last_letter_obj = current_letter_obj
         
