@@ -9,3 +9,5 @@ if not 'd' in test_obj:
 
 else:
     print('no dice')
+
+

@@ -5,8 +5,8 @@ last_letter_obj = {
     'letter': '',
     'pos': '',
     'special': False,
-    'pre_o': False,
     'post_o': False,
+    'pre_o': False,
 }
 tetra_dict = {
     'A': 'A',
@@ -83,15 +83,23 @@ with open('translation.txt') as f:
         if ltr.lower() == 't' and last_letter_obj['pos'] == position[2]:
             last_letter_obj['pos'] = position[1]
 
-    def o_check(ltr):
-        pass
+    def o_check(current):
+
+        if current['letter'] == 'o':
+
+            if last_letter_obj['post_o']:
+                current['pre_o'] = True
+            
+            else:
+                last_letter_obj['post_o'] = True
 
     def double_check(current):
 
-        if last_letter_obj['special'] == True:
-            current['special'] = True
+        if last_letter_obj['letter'].lower() == current['letter'].lower():
 
-        if last_letter_obj['letter'] == current['letter']:
+            if last_letter_obj['special']:
+                current['special'] = True
+
             current['letter'] = '`'
             current['pos'] = last_letter_obj['pos']
 
@@ -100,12 +108,18 @@ with open('translation.txt') as f:
 
         match ltr.lower():
 
+            case '`': # special case for doubler mark
+
+                if last_letter_obj['special']:
+                    current_letter_obj['special'] = True
+
             case 'l': # L
                     
                 if last_letter_obj['pos'] == position[1]:
+                    last_letter_obj['letter'] = last_letter_obj['letter'].upper()
                     last_letter_obj['pos'] = position[0]
 
-                    current_letter_obj['pos'] = position[0]
+                    current_letter_obj['pos'] = position[1]
                     current_letter_obj['special'] = True
 
             case 't': #TH
@@ -138,7 +152,6 @@ with open('translation.txt') as f:
 
     def handle_special(current):
         special_obj = {
-            'l': True,
             'th': True,
             'ch': True,
             'sh': True,
@@ -147,7 +160,7 @@ with open('translation.txt') as f:
 
         if last_letter_obj['special']:
             
-            if not last_letter_obj['letter'].lower() in special_obj:
+            if not last_letter_obj['letter'].lower() in special_obj or last_letter_obj['letter'] == '`':
                 current['pos'] = position[1]
             
             else:
@@ -164,25 +177,29 @@ with open('translation.txt') as f:
         'letter': letter,
         'pos': position[0],
         'special': False,
-        'pre_o': False,
         'post_o': False,
+        'pre_o': False,
         }
         index += 1
+
+        t_check(last_letter_obj['letter'])
+        o_check(current_letter_obj)
 
         # Positons the last letter to the top position and current letter to the bottom positon. Also checks for if a space is next in which case it puts the letter in the full position if need be
         if (last_letter_obj['pos'] == position[0] or last_letter_obj['pos'] == position[1]) and last_letter_obj['letter'] != ' ':
 
-            if (current_letter_obj['letter'] == ' ' or current_letter_obj['letter'] == '\n') and last_letter_obj['letter'].lower() != 'l':
-                last_letter_obj['pos'] = position[0]
-                last_letter_obj['letter'] = last_letter_obj['letter'].upper()
-            
-            else:
-                last_letter_obj['pos'] = position[1]
-                current_letter_obj['pos'] = position[2]
+            if last_letter_obj['letter'] != '\n':
+
+                if current_letter_obj['letter'] == ' ' or current_letter_obj['letter'] == '\n':
+                    last_letter_obj['pos'] = position[0]
+                    last_letter_obj['letter'] = last_letter_obj['letter'].upper()
+                
+                else:
+                    last_letter_obj['pos'] = position[1]
+                    current_letter_obj['pos'] = position[2]
 
         # Positions the next letter to the default(full) position. Also checks to see if last letter is a 't' in which case it positions it accordingly
         elif last_letter_obj['pos'] == position[2]:
-            t_check(last_letter_obj['letter'])
             current_letter_obj['pos'] = position[0]
 
         generate_special(last_letter_obj['letter'])
@@ -194,15 +211,27 @@ with open('translation.txt') as f:
                 'letter': '',
                 'pos': position[2],
                 'special': False,
-                'pre_o': False,
-                'post_o': False,
+                'pre_o': current_letter_obj['pre_o'],
+                'post_o': current_letter_obj['post_o'],
             }
+
+
+        # Get rid of the o's
+        if current_letter_obj['letter'].lower() == 'o':
+            current_letter_obj['letter'] = ''
+            current_letter_obj['pos'] = last_letter_obj['pos']
 
         # Appends the letter to the output either as a space, or translating it through the dict
         if last_letter_obj['letter']:
 
-            if last_letter_obj['letter'] == ' ':
+            if last_letter_obj['letter'] == ' ' or last_letter_obj['letter'] == '\n':
                 output.append(last_letter_obj['letter'])
+            
+            elif last_letter_obj['post_o']:
+                output.append(tetra_dict[last_letter_obj['letter']] + '*')
+
+            elif last_letter_obj['pre_o']:
+                output.append('*' + tetra_dict[last_letter_obj['letter']])                
             
             else:
                 output.append(tetra_dict[last_letter_obj['letter']])
@@ -215,7 +244,7 @@ with open('translation.txt') as f:
 
             output.append(tetra_dict[current_letter_obj['letter']])
 
-        print(last_letter_obj)
+        # print(last_letter_obj)
         last_letter_obj = current_letter_obj
         
     print(''.join(output))
