@@ -85,13 +85,14 @@ with open('translation.txt') as f:
 
     def o_check(current):
 
-        if current['letter'] == 'o':
-
-            if last_letter_obj['post_o']:
+        if current['letter'] == 'o' or last_letter_obj['pre_o']:
+            
+            if last_letter_obj['pre_o'] or last_letter_obj['post_o']:
                 current['pre_o'] = True
             
             else:
                 last_letter_obj['post_o'] = True
+                current['post_o'] = True
 
     def double_check(current):
 
@@ -216,7 +217,7 @@ with open('translation.txt') as f:
             }
 
 
-        # Get rid of the o's
+        # Get rid of the o's        
         if current_letter_obj['letter'].lower() == 'o':
             current_letter_obj['letter'] = ''
             current_letter_obj['pos'] = last_letter_obj['pos']
@@ -231,7 +232,8 @@ with open('translation.txt') as f:
                 output.append(tetra_dict[last_letter_obj['letter']] + '*')
 
             elif last_letter_obj['pre_o']:
-                output.append('*' + tetra_dict[last_letter_obj['letter']])                
+                output.append('*' + tetra_dict[last_letter_obj['letter']])  
+                current_letter_obj['pre_o'] = False              
             
             else:
                 output.append(tetra_dict[last_letter_obj['letter']])
@@ -244,7 +246,8 @@ with open('translation.txt') as f:
 
             output.append(tetra_dict[current_letter_obj['letter']])
 
-        # print(last_letter_obj)
+        print(last_letter_obj)
+        # print(current_letter_obj)
         last_letter_obj = current_letter_obj
         
     print(''.join(output))
