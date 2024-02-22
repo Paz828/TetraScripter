@@ -35,10 +35,29 @@ class Char_List(object):
             yield char
             char = char.next
 
-# Delete
-    # def 
+# Delete a char based on index
+    def remove_index(self, tgt_index):
+        
+        if self.head is None:
+            raise Exception('List is empty')
+        
+        if self.head.data['index'] == tgt_index:
+            self.head = self.head.next
+            return
+        
+        previous_char = self.head
+
+        for char in self:
+
+            if char.data['index'] == tgt_index:
+                previous_char.next = char.next
+                return
+            
+            previous_char = char
+
+        raise Exception("Char with index '%s' not found" % tgt_index)
     
-class Char(object):
+class Char():
 
     def __init__(self, data):
         self.data = data
