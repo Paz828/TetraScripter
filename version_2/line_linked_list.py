@@ -34,6 +34,9 @@ class Char_List(object):
         while char is not None:
             yield char
             char = char.next
+
+# Delete
+    # def 
     
 class Char(object):
 

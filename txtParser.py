@@ -184,6 +184,7 @@ with open('translation.txt') as f:
         index += 1
 
         t_check(last_letter_obj['letter'])
+        double_check(current_letter_obj)
         o_check(current_letter_obj)
 
         # Positons the last letter to the top position and current letter to the bottom positon. Also checks for if a space is next in which case it puts the letter in the full position if need be
@@ -204,7 +205,6 @@ with open('translation.txt') as f:
             current_letter_obj['pos'] = position[0]
 
         generate_special(last_letter_obj['letter'])
-        double_check(current_letter_obj)
         skip = handle_special(current_letter_obj)
 
         if skip == 'skip':

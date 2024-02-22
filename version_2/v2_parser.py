@@ -1,4 +1,5 @@
 from line_linked_list import Char_List, Char
+from grammar_rules import Grammar
 
 with open('../translation.txt') as f:
     position = ['full', 'top', 'bottom']
@@ -17,4 +18,4 @@ with open('../translation.txt') as f:
 
     clist = Char_List(txt_list)
 
-    print(clist.head.next.prev)
+    
