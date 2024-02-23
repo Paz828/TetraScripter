@@ -21,7 +21,7 @@ class Char_List(object):
         nodes = []
 
         while node is not None:
-            nodes.append(node.data)
+            nodes.append(node)
             node = node.next
         nodes.append('End')
 
@@ -57,7 +57,7 @@ class Char_List(object):
 
         raise Exception("Char with index '%s' not found" % tgt_index)
     
-class Char():
+class Char(object):
 
     def __init__(self, data):
         self.data = data
