@@ -50,7 +50,6 @@ with open('../translation.txt') as f:
             else:
                 Grammar(char).check()
                 
-
         else:
             Grammar(char).check()
         
