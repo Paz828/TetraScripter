@@ -41,11 +41,11 @@ class Grammar():
                 self.data['pos'] = position[0]
                 return
 
-            if next_ltr in breaks and prev_pos == position[2]:
-                self.data['pos'] = position[0]
-
-            elif prev_pos == position[0] or prev_pos == position[2] or self.prev.data['after_l']:
+            if prev_pos == position[0] or prev_pos == position[2] or self.prev.data['after_l']:
                 self.data['pos'] = position[1]
+
+                if next_ltr in breaks:
+                    self.data['pos'] = position[0]
 
             else:
                 self.data['pos'] = position[2]
