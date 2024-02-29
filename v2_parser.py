@@ -1,7 +1,7 @@
 from line_linked_list import Char_List
 from grammar_rules import Grammar
 
-with open('../translation.txt') as f:
+with open('translation.txt') as f:
     position = ['full', 'top', 'bottom']
     txt = f.read() + '\n'
     txt_list = []
