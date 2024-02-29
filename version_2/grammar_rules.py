@@ -84,19 +84,15 @@ class Grammar():
                 self.data['special'] = True
 
     def t(self):
+        next = self.next
+        next_ltr = next.data['letter']
 
-        if self.letter == 't' and self.data['pos'] == position[2]:
+        while next_ltr == 'o':
+            next = next.next
+            next_ltr = next.data['letter']
 
-            if not self.next:
-                self.data['pos'] = position[0]
-
-            else:
-
-                if self.next.data['letter'] in breaks:
-                    self.data['pos'] = position[0]
-
-                else:
-                    self.data['pos'] = position[1]
+        if next_ltr == 't' and self.data['pos'] == position[1]:
+            self.data['pos'] = position[0]
 
     def o(self):
             
