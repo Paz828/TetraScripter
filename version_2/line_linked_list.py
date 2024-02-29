@@ -31,10 +31,10 @@ class Char_List(object):
     def __iter__(self):
         char = self.head
 
-        while char is not None:
+        while char:
             yield char
             char = char.next
-
+        
 # Delete a char based on index
     def remove_index(self, tgt_index):
         
@@ -51,6 +51,7 @@ class Char_List(object):
 
             if char.data['index'] == tgt_index:
                 previous_char.next = char.next
+                char.next.prev = previous_char
                 return
             
             previous_char = char
@@ -66,10 +67,3 @@ class Char(object):
 
     def __repr__(self):
         return str(self.data)
-    
-        # self.char = ltr
-        # self.pos = None
-        # self.special = None
-        # self.post_o = False
-        # self.pre_o = False
-        # self.doubled = False

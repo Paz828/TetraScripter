@@ -34,7 +34,8 @@ class Grammar():
                 self.data['pos'] = position[2]
 
         else:
-            next_ltr = self.next.data['letter']
+            next = self.next
+            next_ltr = next.data['letter']
             prev_pos = self.prev.data['pos']
 
             if self.letter in breaks:
@@ -44,6 +45,10 @@ class Grammar():
             if prev_pos == position[0] or prev_pos == position[2] or self.prev.data['after_l']:
                 self.data['pos'] = position[1]
 
+                while next_ltr == 'o':
+                    next = next.next
+                    next_ltr = next.data['letter']
+
                 if next_ltr in breaks:
                     self.data['pos'] = position[0]
 
@@ -51,11 +56,9 @@ class Grammar():
                 self.data['pos'] = position[2]
 
     # fixes the position for any characters with specific rules
-        self.special()
-        self.double()
         self.t()
-        self.o()
         self.l()
+        self.special()
 
     def special(self):
         
@@ -76,7 +79,7 @@ class Grammar():
         if self.next:
             next_ltr = self.next.data['letter']
 
-            if self.letter == next_ltr:
+            if self.letter == next_ltr and self.letter not in breaks:
                 self.data['doubled'] = True
                 self.data['special'] = True
 
@@ -99,8 +102,12 @@ class Grammar():
             
         if self.next:
 
-            if self.data['doubled'] and self.next.next.data['letter'] == 'o':
-                self.data['post_o'] = True
+            if self.data['doubled']:
+
+                if self.next.next:
+
+                    if self.next.next.data['letter'] == 'o':
+                        self.data['post_o'] = True
                 
             if self.next.data['letter'] == 'o':
                 self.data['post_o'] = True
@@ -108,12 +115,9 @@ class Grammar():
                 if self.next.next:
 
                     if self.next.next.data['letter'] == 'o':
-                        self.data['oo'] = True
 
                         if self.next.next.next:
                             self.next.next.next.data['pre_o'] = True
-
-                self.data['special'] = True
 
     def l(self):
 
@@ -125,13 +129,14 @@ class Grammar():
             if self.data['pos'] == position[1]:
                 self.data['pos'] = position[0]
 
-                next = self.next
-                next_ltr = next.data['letter']
+            next = self.next
+            next_ltr = next.data['letter']
                     
-                while next_ltr == 'o' or next_ltr == 'l':
-                    next_ltr = next.data['letter']
-                    next = next.next
+            while next_ltr == 'o' or next_ltr == 'l':
+                next = next.next
+                next_ltr = next.data['letter']
 
+            if next.data['letter'] not in breaks:
                 next.data['after_l'] = True
 
     def convert(self):
@@ -143,9 +148,11 @@ class Grammar():
                 self.data['letter'] = self.data['letter'].upper()
 
             if data['doubled']:
+                
+                if self.next.next:
 
-                if self.next.next.data['letter'] in breaks and data['pos'] == position[1]:
-                    self.data['letter'] = self.data['letter'].upper()
+                    if self.next.next.data['letter'] in breaks and data['pos'] == position[1]:
+                        self.data['letter'] = self.data['letter'].upper()
 
                 self.data['letter'] = self.data['letter'] + '`'
 
@@ -156,5 +163,7 @@ class Grammar():
                 self.data['letter'] = '*' + self.data['letter']
 
     def check(self):
+        self.double()
+        self.o()
         self.format()
         self.convert()

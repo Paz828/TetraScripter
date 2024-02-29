@@ -3,7 +3,7 @@ from grammar_rules import Grammar
 
 with open('../translation.txt') as f:
     position = ['full', 'top', 'bottom']
-    txt = f.read()
+    txt = f.read() + '\n'
     txt_list = []
     index = 0
 # Creates the Char linked List
@@ -13,11 +13,10 @@ with open('../translation.txt') as f:
         'letter': char.lower(),
         'pos': position[0],
         'doubled': False,
-        'oo': False,
         'special': False,
         'post_o': False,
-        'after_l': False,
         'pre_o': False,
+        'after_l': False,
         }
 
         txt_list.append(char_obj)
@@ -29,23 +28,16 @@ with open('../translation.txt') as f:
     for char in clist:
         data = char.data
         
-        if char.next:
-            next = char.next.data
-
         if char.prev:
             prev = char.prev.data
 
-            if prev['special']:
+            if data['letter'] == 'o':
+                clist.remove_index(data['index'])
 
-                if prev['oo']:
-                    prev['oo'] = False
-                    clist.remove_index(char.next.data['index'])
-                    
+            elif prev['special']:
                 clist.remove_index(data['index'])
                 prev['special'] = False
 
-            elif data['letter'] == 'o':
-                clist.remove_index(data['index'])
 
             else:
                 Grammar(char).check()
